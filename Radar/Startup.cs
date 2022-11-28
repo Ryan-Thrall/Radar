@@ -33,6 +33,9 @@ public class Startup
 
     services.AddScoped<AccountsRepository>();
     services.AddScoped<AccountService>();
+
+    services.AddTransient<GamesRepo>();
+    services.AddTransient<GamesService>();
   }
 
   private void ConfigureCors(IServiceCollection services)
