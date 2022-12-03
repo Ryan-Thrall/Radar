@@ -25,4 +25,26 @@ public class GamesRepo : BaseRepo
     data.Id = _db.ExecuteScalar<int>(sql, data);
     return data;
   }
+
+  public List<Game> GetJoinableGames()
+  {
+    string status = "Waiting for players";
+    // Sql Commands to Make a Game Object
+    string sql = @"
+      SELECT 
+      g.*,
+      a.*
+      FROM games g
+      JOIN accounts a on a.id = g.creatorId
+      WHERE g.status = @status 
+      GROUP BY g.id
+    ;";
+
+    return _db.Query<Game, Account, Game>(sql, (g, a) =>
+    {
+      g.Creator = a;
+      return g;
+    }, new { status }).ToList();
+
+  }
 }

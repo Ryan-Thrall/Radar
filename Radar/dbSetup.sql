@@ -46,6 +46,8 @@ CREATE TABLE
         Foreign Key (creatorId) REFERENCES accounts(id) ON DELETE CASCADE
     ) default charset utf8 COMMENT '';
 
+SELECT * FROM games;
+
 -- Foreign Key (winnerId) REFERENCES accounts (id) ON DELETE CASCADE,
 
 -- Foreign Key (mapId) REFERENCES maps(id) ON DELETE CASCADE

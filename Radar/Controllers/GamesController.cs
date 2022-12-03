@@ -41,4 +41,18 @@ public class GamesController : ControllerBase
       return BadRequest(e.Message);
     }
   }
+
+  [HttpGet]
+  public ActionResult<Game> GetJoinableGames()
+  {
+    try
+    {
+      List<Game> games = _gamesServ.GetJoinableGames();
+      return Ok(games);
+    }
+    catch (Exception e)
+    {
+      return BadRequest(e.Message);
+    }
+  }
 }

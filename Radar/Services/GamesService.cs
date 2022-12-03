@@ -21,4 +21,10 @@ public class GamesService
     game.Creator = userInfo;
     return game;
   }
+
+  public List<Game> GetJoinableGames()
+  {
+    List<Game> games = _gamesRepo.GetJoinableGames();
+    return games;
+  }
 }

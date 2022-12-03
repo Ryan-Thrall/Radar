@@ -29,17 +29,42 @@
       </div>
 
     </div>
+
+    <div class="row">
+      <div class="col-12">
+        <h1 class="mt-3">Join a Game</h1>
+      </div>
+
+      <GameCard v-for="g in publicGames" :game="g" :key="g.id" />
+    </div>
+
   </div>
 </template>
 
 <script>
 import { computed } from '@vue/reactivity';
+import { onMounted } from 'vue';
 import { AppState } from '../AppState.js';
+import { gamesService } from '../services/GamesService.js'
+import Pop from '../utils/Pop.js';
 
 export default {
   setup() {
+    async function getJoinableGames() {
+      try {
+        await gamesService.getJoinableGames();
+      } catch (error) {
+        Pop.error(error, "[Getting Joinable Games]")
+      }
+    }
+
+    onMounted(() => {
+      getJoinableGames();
+    })
+
     return {
-      account: computed(() => AppState.account)
+      account: computed(() => AppState.account),
+      publicGames: computed(() => AppState.publicGames)
     }
   }
 }
@@ -64,22 +89,5 @@ export default {
       object-position: center;
     }
   }
-}
-
-.status-tag {
-  position: absolute;
-  bottom: 0;
-  background-color: rgb(115, 0, 0);
-}
-
-.host-img {
-  width: 3rem;
-  height: 3rem;
-}
-
-.private-symbol {
-  position: absolute;
-  bottom: 0;
-  right: 0.5rem;
 }
 </style>
