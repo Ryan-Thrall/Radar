@@ -43,14 +43,12 @@ CREATE TABLE
         playerCount INT DEFAULT 0,
         status VARCHAR(255) NOT NULL,
         winnerId VARCHAR(255),
-        Foreign Key (creatorId) REFERENCES accounts(id) ON DELETE CASCADE
+        Foreign Key (creatorId) REFERENCES accounts(id) ON DELETE CASCADE,
+        Foreign Key (winnerId) REFERENCES accounts (id) ON DELETE CASCADE,
+        Foreign Key (mapId) REFERENCES maps(id) ON DELETE CASCADE
     ) default charset utf8 COMMENT '';
 
 SELECT * FROM games;
-
--- Foreign Key (winnerId) REFERENCES accounts (id) ON DELETE CASCADE,
-
--- Foreign Key (mapId) REFERENCES maps(id) ON DELETE CASCADE
 
 CREATE TABLE
     IF NOT EXISTS players(
@@ -64,7 +62,8 @@ CREATE TABLE
         playerNum INT NOT NULL,
         gameId INT NOT NULL,
         status VARCHAR(255) NOT NULL,
-        techTree VARCHAR(255) NOT NULL,
-        resources VARCHAR(255) NOT NULL,
+        techTree VARCHAR(255),
+        resources VARCHAR(255),
+        faction VARCHAR(255),
         Foreign Key (creatorId) REFERENCES accounts(id) ON DELETE CASCADE
     ) default charset utf8 COMMENT '';

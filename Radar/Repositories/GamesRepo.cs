@@ -33,9 +33,11 @@ public class GamesRepo : BaseRepo
     string sql = @"
       SELECT 
       g.*,
+      COUNT(p.id) AS playerCount,
       a.*
       FROM games g
       JOIN accounts a on a.id = g.creatorId
+      LEFT JOIN players p ON p.gameId = g.id
       WHERE g.status = @status 
       GROUP BY g.id
     ;";
@@ -46,5 +48,26 @@ public class GamesRepo : BaseRepo
       return g;
     }, new { status }).ToList();
 
+  }
+
+  public Game GetGameById(int gameId)
+  {
+    string sql = @"
+    SELECT
+    g.*,
+    COUNT(p.id) AS playerCount,
+    a.*
+    FROM games g
+    JOIN accounts a ON a.id = g.creatorId
+    LEFT JOIN players p ON p.gameId = g.id
+    WHERE g.id = @gameId
+    GROUP BY g.id
+    ;";
+
+    return _db.Query<Game, Account, Game>(sql, (g, a) =>
+    {
+      g.Creator = a;
+      return g;
+    }, new { gameId }).FirstOrDefault();
   }
 }

@@ -17,6 +17,7 @@ public class GamesController : ControllerBase
   }
 
   // SECTION Post
+  // Create Game
   [Authorize]
   [HttpPost]
   public async Task<ActionResult<Game>> CreateGame([FromBody] Game data)
@@ -42,7 +43,9 @@ public class GamesController : ControllerBase
     }
   }
 
-  [HttpGet]
+  // SECTION Get
+  // Get Not Started Joinable Games
+  [HttpGet()]
   public ActionResult<Game> GetJoinableGames()
   {
     try
@@ -55,4 +58,24 @@ public class GamesController : ControllerBase
       return BadRequest(e.Message);
     }
   }
+
+  // [HttpGet("/myGames")]
+  // public async Task<ActionResult<Game>> GetMyGames()
+  // {
+  //   try
+  //   {
+  //     // Access User Info or throw error
+  //     var userInfo = await _auth0.GetUserInfoAsync<Account>(HttpContext);
+  //     if (userInfo == null || userInfo.Id == null)
+  //     {
+  //       throw new Exception("Cannot Access Account. Relogin and try again.");
+  //     }
+
+  //     return Ok();
+  //   }
+  //   catch (Exception e)
+  //   {
+  //     return BadRequest(e.Message);
+  //   }
+  // }
 }

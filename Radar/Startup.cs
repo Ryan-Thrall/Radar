@@ -36,6 +36,9 @@ public class Startup
 
     services.AddTransient<GamesRepo>();
     services.AddTransient<GamesService>();
+
+    services.AddTransient<PlayersRepo>();
+    services.AddTransient<PlayersService>();
   }
 
   private void ConfigureCors(IServiceCollection services)

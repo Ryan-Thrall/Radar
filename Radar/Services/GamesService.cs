@@ -27,4 +27,14 @@ public class GamesService
     List<Game> games = _gamesRepo.GetJoinableGames();
     return games;
   }
+
+  public Game GetGameById(int gameId)
+  {
+    Game game = _gamesRepo.GetGameById(gameId);
+    if (game == null)
+    {
+      throw new Exception("Bad Game Id!");
+    }
+    return game;
+  }
 }
