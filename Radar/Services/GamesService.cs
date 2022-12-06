@@ -3,13 +3,15 @@ namespace Radar.Services;
 public class GamesService
 {
   private readonly GamesRepo _gamesRepo;
-
+  // private readonly PlayersService _playersServ;
+  //PlayersService playersServ
   public GamesService(GamesRepo gamesRepo)
   {
     _gamesRepo = gamesRepo;
+    // _playersServ = playersServ;
   }
 
-  public Game CreateGame(Game data, Account userInfo)
+  public Game HostGame(Game data, Account userInfo)
   {
     // Force User to be the creator
     data.CreatorId = userInfo.Id;
@@ -17,8 +19,15 @@ public class GamesService
     // Force Status to be waiting for players
     data.Status = "Waiting for players";
 
+    data.Type = "Hosted";
+
+    // Create the Game Object and Give it the Creator Data
     Game game = _gamesRepo.CreateGame(data);
     game.Creator = userInfo;
+
+
+
+
     return game;
   }
 
@@ -36,5 +45,12 @@ public class GamesService
       throw new Exception("Bad Game Id!");
     }
     return game;
+  }
+
+  public List<Game> GetMyGames(string userId)
+  {
+    List<Game> games = _gamesRepo.GetMyGames(userId);
+
+    return games;
   }
 }

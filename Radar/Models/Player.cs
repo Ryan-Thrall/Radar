@@ -18,5 +18,6 @@ public class Player : IHasCreator
   public string Status { get; set; }
   public string TechTree { get; set; }
   public string Resources { get; set; }
+  public Game Game { get; set; }
 
 }

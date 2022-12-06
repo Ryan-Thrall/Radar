@@ -7,4 +7,10 @@ export const AppState = reactive({
   account: {},
 
   publicGames: [],
+
+  joinableGames: [],
+
+  gameMenuTab: "myGames",
+
+  myGames: [],
 })

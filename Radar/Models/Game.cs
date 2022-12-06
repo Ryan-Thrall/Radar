@@ -19,6 +19,7 @@ public class Game : IHasCreator
   public int Pin { get; set; }
   public int PlayerCount { get; set; }
   public string Status { get; set; }
+  public string Type { get; set; }
   public string WinnerId { get; set; }
   public Account Winner { get; set; }
   public Map Map { get; set; }

@@ -42,6 +42,7 @@ CREATE TABLE
         -- Game Data
         playerCount INT DEFAULT 0,
         status VARCHAR(255) NOT NULL,
+        type VARCHAR(255) NOT NULL,
         winnerId VARCHAR(255),
         Foreign Key (creatorId) REFERENCES accounts(id) ON DELETE CASCADE,
         Foreign Key (winnerId) REFERENCES accounts (id) ON DELETE CASCADE,
@@ -67,3 +68,14 @@ CREATE TABLE
         faction VARCHAR(255),
         Foreign Key (creatorId) REFERENCES accounts(id) ON DELETE CASCADE
     ) default charset utf8 COMMENT '';
+
+SELECT
+    g.*,
+    COUNT(p.id) AS playerCount,
+    a.*
+FROM games g
+    JOIN accounts a ON a.id = g.creatorId
+    LEFT JOIN players p ON p.gameId = g.id
+WHERE
+    p.creatorId = "633cb0c85d1225c4338921ba"
+GROUP BY g.id;

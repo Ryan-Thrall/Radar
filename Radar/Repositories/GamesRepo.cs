@@ -12,8 +12,8 @@ public class GamesRepo : BaseRepo
 
     // Sql Commands to Make a Game Object
     string sql = @"
-    INSERT INTO games(creatorId, name, playerLimit, isPrivate, pin, status)
-    VALUES(@CreatorId, @Name, @PlayerLimit, @IsPrivate, @Pin, @Status);
+    INSERT INTO games(creatorId, name, playerLimit, isPrivate, pin, status, type)
+    VALUES(@CreatorId, @Name, @PlayerLimit, @IsPrivate, @Pin, @Status, @Type);
     SELECT LAST_INSERT_ID()
     ;";
 
@@ -29,7 +29,6 @@ public class GamesRepo : BaseRepo
   public List<Game> GetJoinableGames()
   {
     string status = "Waiting for players";
-    // Sql Commands to Make a Game Object
     string sql = @"
       SELECT 
       g.*,
@@ -69,5 +68,28 @@ public class GamesRepo : BaseRepo
       g.Creator = a;
       return g;
     }, new { gameId }).FirstOrDefault();
+  }
+
+  public List<Game> GetMyGames(string userId)
+  {
+
+    string sql = @"
+      SELECT 
+      g.*,
+      COUNT(p.id) AS playerCount,
+      a.*
+      FROM games g
+      JOIN accounts a on a.id = g.creatorId
+      LEFT JOIN players p ON p.gameId = g.id
+      WHERE p.creatorId = @userId
+      GROUP BY g.id
+    ;";
+
+    return _db.Query<Game, Account, Game>(sql, (g, a) =>
+    {
+      g.Creator = a;
+      return g;
+    }, new { userId }).ToList();
+
   }
 }

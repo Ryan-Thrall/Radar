@@ -7,20 +7,22 @@ public class GamesController : ControllerBase
 {
   // SECTION Used Files
   private readonly GamesService _gamesServ;
+  private readonly PlayersService _playersServ;
   private readonly Auth0Provider _auth0;
 
   // SECTION Constructor
-  public GamesController(Auth0Provider auth0, GamesService gamesServ)
+  public GamesController(Auth0Provider auth0, GamesService gamesServ, PlayersService playersServ)
   {
     _gamesServ = gamesServ;
+    _playersServ = playersServ;
     _auth0 = auth0;
   }
 
   // SECTION Post
   // Create Game
   [Authorize]
-  [HttpPost]
-  public async Task<ActionResult<Game>> CreateGame([FromBody] Game data)
+  [HttpPost("Host")]
+  public async Task<ActionResult<Game>> HostGame([FromBody] Game data)
   {
     try
     {
@@ -31,8 +33,15 @@ public class GamesController : ControllerBase
         throw new Exception("Cannot Access Account. Relogin and try again.");
       }
 
-      // Create and return a game
-      Game game = _gamesServ.CreateGame(data, userInfo);
+      // Create and return a Hosted Game
+      Game game = _gamesServ.HostGame(data, userInfo);
+
+      Player playerData = new Player()
+      {
+        GameId = game.Id
+      };
+
+      Player player = _playersServ.JoinGame(playerData, userInfo);
 
       // Return game object
       return Ok(game);
@@ -59,23 +68,26 @@ public class GamesController : ControllerBase
     }
   }
 
-  // [HttpGet("/myGames")]
-  // public async Task<ActionResult<Game>> GetMyGames()
-  // {
-  //   try
-  //   {
-  //     // Access User Info or throw error
-  //     var userInfo = await _auth0.GetUserInfoAsync<Account>(HttpContext);
-  //     if (userInfo == null || userInfo.Id == null)
-  //     {
-  //       throw new Exception("Cannot Access Account. Relogin and try again.");
-  //     }
+  [Authorize]
+  [HttpGet("myGames")]
+  public async Task<ActionResult<Game>> GetMyGames()
+  {
+    try
+    {
+      // Access User Info or throw error
+      var userInfo = await _auth0.GetUserInfoAsync<Account>(HttpContext);
+      if (userInfo == null || userInfo.Id == null)
+      {
+        throw new Exception("Cannot Access Account. Relogin and try again.");
+      }
 
-  //     return Ok();
-  //   }
-  //   catch (Exception e)
-  //   {
-  //     return BadRequest(e.Message);
-  //   }
-  // }
+      List<Game> games = _gamesServ.GetMyGames(userInfo.Id);
+
+      return Ok(games);
+    }
+    catch (Exception e)
+    {
+      return BadRequest(e.Message);
+    }
+  }
 }

@@ -9,6 +9,12 @@ class GamesService {
     // console.log(res.data)
     AppState.publicGames = res.data.map(g => new Game(g))
   }
+
+  async getMyGames() {
+    const res = await api.get('api/games/myGames')
+
+    AppState.myGames = res.data.map(g => new Game(g))
+  }
 }
 
 export const gamesService = new GamesService();

@@ -15,6 +15,7 @@ export class Game {
     this.playerCount = data.playerCount;
     this.playerLimit = data.playerLimit;
     this.status = data.status;
+    this.type = data.type;
     this.winner = data.winner;
     this.winnerId = data.winnerId;
   }
